@@ -29,7 +29,6 @@
 #define BST_H_
 
 #include <stdlib.h>
-#include <string>
 
 template <class T, class S> class BinarySearchTree {
  public:
