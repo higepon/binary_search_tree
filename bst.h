@@ -29,6 +29,7 @@
 #define BST_H_
 
 #include <stdlib.h>
+#include <string>
 
 template <class T, class S> class BinarySearchTree {
  public:
@@ -173,6 +174,7 @@ template <class T, class S> class BinarySearchTree {
       parentOfLeftMost->left = NULL;
       node->key = leftMost->key;
       node->value = leftMost->value;
+      delete leftMost;
     }
   }
 
