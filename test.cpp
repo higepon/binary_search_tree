@@ -240,6 +240,30 @@ TEST_F(BinarySearchTreeTest, RemoveNodeWithOneChild4) {
   EXPECT_TRUE(found2);
 }
 
+TEST_F(BinarySearchTreeTest, RemoveNodeWithTwoChildren) {
+  //     3
+  // 1         5
+  //        4     7
+  //            6
+  bst_.Add(3, 3);
+  bst_.Add(1, 1);
+  bst_.Add(5, 5);
+  bst_.Add(4, 4);
+  bst_.Add(7, 7);
+  bst_.Add(6, 6);
+  bool removed = false;
+  bst_.Remove(5, &removed);
+  EXPECT_TRUE(removed);
+
+  bool found = true;
+  EXPECT_EQ(0, bst_.Get(5, &found));
+  EXPECT_FALSE(found);
+
+  bool found2 = false;
+  EXPECT_EQ(6, bst_.Get(6, &found2));
+  EXPECT_TRUE(found2);
+}
+
 }  // namespace
 
 int main(int argc, char **argv) {

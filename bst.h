@@ -163,6 +163,16 @@ template <class T, class S> class BinarySearchTree {
         parent->right = node->right;
       }
       delete node;
+    } else {
+      Node* parentOfLeftMost = node;
+      Node* leftMost = node->right;
+      while (leftMost->left) {
+        parentOfLeftMost = leftMost;
+        leftMost = leftMost->left;
+      }
+      parentOfLeftMost->left = NULL;
+      node->key = leftMost->key;
+      node->value = leftMost->value;
     }
   }
 
