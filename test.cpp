@@ -176,10 +176,69 @@ TEST_F(BinarySearchTreeTest, RemoveNodeWithOneChild) {
   EXPECT_FALSE(found);
 
   bool found2 = false;
-  EXPECT_EQ(0, bst_.Get(11, &found));
+  EXPECT_EQ(11, bst_.Get(11, &found2));
   EXPECT_TRUE(found2);
 }
 
+TEST_F(BinarySearchTreeTest, RemoveNodeWithOneChild2) {
+  //   8
+  //      10
+  //    9
+  bst_.Add(8, 8);
+  bst_.Add(10, 10);
+  bst_.Add(9, 9);
+  bool removed = false;
+  bst_.Remove(10, &removed);
+  EXPECT_TRUE(removed);
+
+  bool found = true;
+  EXPECT_EQ(0, bst_.Get(10, &found));
+  EXPECT_FALSE(found);
+
+  bool found2 = false;
+  EXPECT_EQ(9, bst_.Get(9, &found2));
+  EXPECT_TRUE(found2);
+}
+
+TEST_F(BinarySearchTreeTest, RemoveNodeWithOneChild3) {
+  //   8
+  //  5
+  // 4
+  bst_.Add(8, 8);
+  bst_.Add(5, 5);
+  bst_.Add(4, 4);
+  bool removed = false;
+  bst_.Remove(5, &removed);
+  EXPECT_TRUE(removed);
+
+  bool found = true;
+  EXPECT_EQ(0, bst_.Get(5, &found));
+  EXPECT_FALSE(found);
+
+  bool found2 = false;
+  EXPECT_EQ(4, bst_.Get(4, &found2));
+  EXPECT_TRUE(found2);
+}
+
+TEST_F(BinarySearchTreeTest, RemoveNodeWithOneChild4) {
+  //     8
+  //   5
+  //     6
+  bst_.Add(8, 8);
+  bst_.Add(5, 5);
+  bst_.Add(6, 6);
+  bool removed = false;
+  bst_.Remove(5, &removed);
+  EXPECT_TRUE(removed);
+
+  bool found = true;
+  EXPECT_EQ(0, bst_.Get(5, &found));
+  EXPECT_FALSE(found);
+
+  bool found2 = false;
+  EXPECT_EQ(6, bst_.Get(6, &found2));
+  EXPECT_TRUE(found2);
+}
 
 }  // namespace
 

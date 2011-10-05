@@ -25,8 +25,8 @@
  *   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
-#ifndef _USERS_TARO_BINARY_SEARCH_TREE_BST_H_
-#define _USERS_TARO_BINARY_SEARCH_TREE_BST_H_
+#ifndef BST_H_
+#define BST_H_
 
 #include <stdlib.h>
 
@@ -120,19 +120,24 @@ template <class T, class S> class BinarySearchTree {
         value(value),
         left(left),
         right(right) {}
+
     bool IsLeaf() const {
       return left == NULL && right == NULL;
     }
+
+    bool HasOnlyLeftChild() const {
+      return (left != NULL && right == NULL);
+    }
+
+    bool HasOnlyRightChild() const {
+      return (left == NULL && right != NULL);
+    }
+
     T key;
     S value;
     Node* left;
     Node* right;
   };
-
-  bool hasOneChild(Node* node) const {
-    return (node->left == NULL && node->right != NULL)
-        || (node->left != NULL && node->right == NULL);
-  }
 
   void RemoveNode(Node* parent, Node* node) {
     if (node->IsLeaf()) {
@@ -144,12 +149,24 @@ template <class T, class S> class BinarySearchTree {
         parent->right = NULL;
       }
       delete node;
-    } else if (hasOneChild(node)) {
-
+    } else if (node->HasOnlyLeftChild()) {
+      if (parent->left == node) {
+        parent->left = node->left;
+      } else {
+        parent->right = node->left;
+      }
+      delete node;
+    } else if (node->HasOnlyRightChild()) {
+      if (parent->left == node) {
+        parent->left = node->right;
+      } else {
+        parent->right = node->right;
+      }
+      delete node;
     }
   }
 
   Node* root_;
 };
 
-#endif  // _USERS_TARO_BINARY_SEARCH_TREE_BST_H_
+#endif  // BST_H_
