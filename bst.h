@@ -28,7 +28,12 @@
 #ifndef BST_H_
 #define BST_H_
 
+#include <assert.h>
 #include <stdlib.h>
+#ifndef MONA
+#include <vector>
+#include <algorithm>
+#endif
 
 template <class T, class S> class BinarySearchTree {
  public:
@@ -41,6 +46,7 @@ template <class T, class S> class BinarySearchTree {
   void Add(const T key, S value) {
     if (root_ == NULL) {
       root_ = new Node(key, value);
+      assert(CheckSanity());
       return;
     }
     // N.B.
@@ -50,10 +56,12 @@ template <class T, class S> class BinarySearchTree {
     for (Node* current = root_;;) {
       if (current->key == key) {
         current->value = value;
+        assert(CheckSanity());
         return;
       } else if (current->key < key) {
         if (current->right == NULL) {
           current->right = new Node(key, value);
+          assert(CheckSanity());
           return;
         } else {
           current = current->right;
@@ -61,11 +69,33 @@ template <class T, class S> class BinarySearchTree {
       } else {
         if (current->left == NULL) {
           current->left = new Node(key, value);
+          assert(CheckSanity());
           return;
         } else {
           current = current->left;
         }
       }
+    }
+  }
+
+  S GetLowerNearest(const T key) const {
+    Node* last_node_lt_key = NULL;
+    Node* n = root_;
+
+    while (n != NULL) {
+      if (n->key == key) {
+        return n->value;
+      } else if (n->key < key) {
+        last_node_lt_key = n;
+        n = n->right;
+      } else {
+        n = n->left;
+      }
+    }
+    if (last_node_lt_key == NULL) {
+      return S();
+    } else {
+      return last_node_lt_key->value;
     }
   }
 
@@ -96,12 +126,14 @@ template <class T, class S> class BinarySearchTree {
         if (removed) {
           *removed = false;
         }
+        assert(CheckSanity());
         return;
       } else if (current->key == key) {
         RemoveNode(parent, current);
         if (removed) {
           *removed = true;
         }
+        assert(CheckSanity());
         return;
       } else if (current->key < key) {
         parent = current;
@@ -111,6 +143,19 @@ template <class T, class S> class BinarySearchTree {
         current = current->left;
       }
     }
+  }
+
+
+  bool CheckSanity() const {
+#ifdef MONA
+    return true;
+#else
+    std::vector<T> keys;
+    GetInOrder(root_, &keys);
+    std::vector<T> sorted = keys;
+    sort(keys.begin(), keys.end());
+    return keys == sorted;
+#endif
   }
 
  private:
@@ -170,11 +215,24 @@ template <class T, class S> class BinarySearchTree {
         parentOfLeftMost = leftMost;
         leftMost = leftMost->left;
       }
-      parentOfLeftMost->left = NULL;
+      if (parentOfLeftMost->left == leftMost) {
+        parentOfLeftMost->left = NULL;
+      } else {
+        parentOfLeftMost->right = NULL;
+      }
       node->key = leftMost->key;
       node->value = leftMost->value;
       delete leftMost;
     }
+  }
+
+  void GetInOrder(Node* node, std::vector<T>* keys) const {
+    if (node == NULL) {
+      return;
+    }
+    GetInOrder(node->left, keys);
+    keys->push_back(node->key);
+    GetInOrder(node->right, keys);
   }
 
   Node* root_;
